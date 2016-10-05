@@ -22,6 +22,8 @@ public class Main {
         Instance instance = new Instance(args[0]);
         try {
             instance.read();
+            instance.createDistanceMatrix();
+            instance.getNaiveSolution();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-2);
