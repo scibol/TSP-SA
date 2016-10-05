@@ -82,14 +82,14 @@ public class Instance {
         int d = this.dimension;
         this.distanceMap = new double[d][d];
         for (int i = 0; i < d; i++) {
-            for (int j = i+1; j < d; j++) {
+            for (int j = 0; j < d; j++) {
                 this.distanceMap[i][j] = getDistance(this.nodeList.get(i), this.nodeList.get(j));
             }
         }
     }
 
-    public boolean isVisited(int[] visitedNodes, int node) {
-        for (int i = 0; i < visitedNodes.length; i++) {
+    public boolean isVisited(int[] visitedNodes, int node, int index) {
+        for (int i = 0; i < index; i++) {
             if (visitedNodes[i] == node) {
                 return true;
             }
@@ -97,23 +97,21 @@ public class Instance {
         return false;
     }
 
-
     public void getNaiveSolution() {
-        Random n = new Random();
-        String path = new String();
         int d = this.dimension;
-        int r = n.nextInt(d+1);
-        path += r + " ";
+//        int r = n.nextInt(d+1);
+        int r = 4;
         int[] visitedNodes = new int[130];
+        visitedNodes[0] = r;
         double pathLength = 0;
         int start = r;
-        int i = 0;
+        int i = 1;
         while (i < d) {
-            int j = i;
-            int newNode = j;
-            double min = this.distanceMap[r][j];
+            int j = 0;
+            double min = 100000000.0;
+            int newNode = 0;
             while (j < d) {
-                if (this.distanceMap[r][j] < min && this.distanceMap[r][j] != 0 && !isVisited(visitedNodes, j)) {
+                if (this.distanceMap[r][j] < min && r != j && !isVisited(visitedNodes, j, i)) {
                     min = this.distanceMap[r][j];
                     newNode = j;
                 }
@@ -121,13 +119,18 @@ public class Instance {
             }
             visitedNodes[i] = newNode;
             pathLength += min;
-            path += newNode + " ";
             r = newNode;
             i++;
         }
-        pathLength += this.distanceMap[start][r];
-        System.out.println(path);
+        pathLength += this.distanceMap[r][start];
         System.out.println(pathLength);
+        printSolution(visitedNodes);
+    }
+
+    public void printSolution(int[] visitedNodes) {
+        for (int i = 0; i < visitedNodes.length; i++) {
+            System.out.println(visitedNodes[i] + 1);
+        }
     }
 
     public double getDistance(Node i, Node j) {
