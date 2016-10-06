@@ -14,6 +14,7 @@ public class Instance {
     private double distanceMap[][];
 
 
+
     private class Node {
         public long x;
         public int n;
@@ -34,21 +35,7 @@ public class Instance {
         }
     }
 
-
-    public int size() {
-        return dimension;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
     public Instance(String filename) {
-
         this.filename = filename;
         System.out.println(this.filename);
     }
@@ -97,35 +84,45 @@ public class Instance {
         return false;
     }
 
-    public void getNaiveSolution() {
-        int d = this.dimension;
-//        int r = n.nextInt(d+1);
-        int r = 4;
+    public double getNaiveSolution(int startSeed) {
         int[] visitedNodes = new int[130];
-        visitedNodes[0] = r;
+        visitedNodes[0] = startSeed;
+        int r = startSeed;
         double pathLength = 0;
-        int start = r;
-        int i = 1;
-        while (i < d) {
-            int j = 0;
-            double min = 100000000.0;
+        
+        for (int i = 1; i < this.dimension; i++) {
+            double min = Double.POSITIVE_INFINITY;
             int newNode = 0;
-            while (j < d) {
+;            for (int j = 0; j < this.dimension; j++) {
                 if (this.distanceMap[r][j] < min && r != j && !isVisited(visitedNodes, j, i)) {
                     min = this.distanceMap[r][j];
                     newNode = j;
                 }
-                j++;
             }
             visitedNodes[i] = newNode;
             pathLength += min;
             r = newNode;
-            i++;
         }
-        pathLength += this.distanceMap[r][start];
-        System.out.println(pathLength);
-        printSolution(visitedNodes);
+        pathLength += this.distanceMap[r][startSeed];
+        return pathLength;
     }
+
+    public void getBestSolution() {
+        double minPath = Double.POSITIVE_INFINITY;
+        int index=0;
+        for (int i = dimension - 1; i >= 0; i--) {
+//            Random n = new Random();
+//            int r = n.nextInt(i + 1);
+            double currentMin = getNaiveSolution(i);
+            if (currentMin < minPath) {
+                index = i;
+                minPath = currentMin;
+            }
+        }
+        System.out.println(index);
+        System.out.println(minPath);
+    }
+
 
     public void printSolution(int[] visitedNodes) {
         for (int i = 0; i < visitedNodes.length; i++) {

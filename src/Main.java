@@ -23,7 +23,7 @@ public class Main {
         try {
             instance.read();
             instance.createDistanceMatrix();
-            instance.getNaiveSolution();
+            instance.getBestSolution();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-2);
